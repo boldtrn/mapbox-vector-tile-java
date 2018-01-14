@@ -16,7 +16,7 @@ public class JtsMvt {
      * Create an empty MVT.
      */
     public JtsMvt() {
-        this(Collections.emptyList());
+        this(Collections.<JtsLayer>emptyList());
     }
 
     /**
