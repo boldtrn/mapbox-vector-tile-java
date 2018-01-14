@@ -1,0 +1,25 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
+}
+
+static def androidCompileSdk() { return 15 }
+
+// Minimum API Level by Support Library
+static def androidMinSdk() { return 14 }
+
+static def androidTargetSdk() { return 15 }
+
+static def versionCode() { return 1 }
+
+def versionName() { return version }
+
+repositories {
+    google()
+}
