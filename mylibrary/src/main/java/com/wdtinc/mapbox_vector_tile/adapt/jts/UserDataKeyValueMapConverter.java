@@ -40,6 +40,7 @@ public final class UserDataKeyValueMapConverter implements IUserDataConverter {
      * @param idKey user data {@link Map} key for getting id value.
      */
     public UserDataKeyValueMapConverter(String idKey) {
+        // this
         Objects.requireNonNull(idKey);
         this.setId = true;
         this.idKey = idKey;

@@ -53,6 +53,7 @@ public final class TagKeyValueMapConverter implements ITagConverter {
      * @param idKey key name to use for feature id value
      */
     public TagKeyValueMapConverter(boolean nullIfEmpty, String idKey) {
+        // this
         Objects.requireNonNull(idKey);
 
         this.nullIfEmpty = nullIfEmpty;

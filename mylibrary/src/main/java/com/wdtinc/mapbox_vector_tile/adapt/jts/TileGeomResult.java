@@ -33,6 +33,7 @@ public final class TileGeomResult {
      * @throws NullPointerException if intGeoms or mvtGeoms are null
      */
     public TileGeomResult(List<Geometry> intGeoms, List<Geometry> mvtGeoms) {
+        // these 2
         Objects.requireNonNull(intGeoms);
         Objects.requireNonNull(mvtGeoms);
         this.intGeoms = intGeoms;

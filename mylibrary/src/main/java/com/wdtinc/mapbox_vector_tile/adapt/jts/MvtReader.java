@@ -71,6 +71,7 @@ public final class MvtReader {
                                  RingClassifier ringClassifier) throws IOException {
         final JtsMvt jtsMvt;
 
+        // try with resources requires api level 19
         try(final InputStream is = new FileInputStream(file)) {
             jtsMvt = loadMvt(is, geomFactory, tagConverter, ringClassifier);
         }
