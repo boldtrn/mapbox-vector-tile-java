@@ -16,7 +16,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Load Mapbox Vector Tiles (MVT) to JTS {@link Geometry}. Feature tags may be converted
@@ -115,12 +117,39 @@ public final class MvtReader {
                                  GeometryFactory geomFactory,
                                  ITagConverter tagConverter,
                                  RingClassifier ringClassifier) throws IOException {
+        return loadMvt(is, geomFactory, tagConverter, ringClassifier, Collections.EMPTY_SET);
+    }
+
+    /**
+     * Load an MVT to JTS geometries using coordinates. Uses {@code tagConverter} to create user data
+     * from feature properties.
+     *
+     * @param is stream with MVT data
+     * @param geomFactory allows for JTS geometry creation
+     * @param tagConverter converts MVT feature tags to JTS user data object.
+     * @param ringClassifier determines how rings are parsed into Polygons and MultiPolygons
+     * @param ignoredLayers names of layers to be ignored
+     * @return JTS MVT with geometry in MVT coordinates
+     * @throws IOException failure reading MVT from stream
+     * @see Geometry
+     * @see Geometry#getUserData()
+     * @see RingClassifier
+     */
+    public static JtsMvt loadMvt(InputStream is,
+            GeometryFactory geomFactory,
+            ITagConverter tagConverter,
+            RingClassifier ringClassifier,
+            Set<String> ignoredLayers) throws IOException {
 
         final VectorTile.Tile mvt = VectorTile.Tile.parseFrom(is);
         final Vec2d cursor = new Vec2d();
         final List<JtsLayer> jtsLayers = new ArrayList<>(mvt.getLayersList().size());
 
         for(VectorTile.Tile.Layer nextLayer : mvt.getLayersList()) {
+
+            if (!ignoredLayers.isEmpty() && ignoredLayers.contains(nextLayer.getName())){
+                continue;
+            }
 
             final List<String> keysList = nextLayer.getKeysList();
             final List<VectorTile.Tile.Value> valuesList = nextLayer.getValuesList();

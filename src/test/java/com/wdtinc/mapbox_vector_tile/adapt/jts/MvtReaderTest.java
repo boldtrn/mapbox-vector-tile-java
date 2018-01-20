@@ -10,9 +10,11 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static com.wdtinc.mapbox_vector_tile.adapt.jts.MvtReader.RING_CLASSIFIER_V2_1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -46,6 +48,33 @@ public final class MvtReaderTest {
             assertTrue(layerIterator.next() == result.getLayer("health"));
             assertTrue(layerIterator.next() == result.getLayer("enemies"));
             assertTrue(layerIterator.next() == result.getLayer("bullet"));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testIgnoreLayers() {
+        try {
+            Set<String> ignoredLayers = new HashSet<>();
+            ignoredLayers.add("bombs");
+            ignoredLayers.add("health");
+            JtsMvt result = MvtReader.loadMvt(
+                    new FileInputStream("src/test/resources/vec_tile_test/game.mvt"),
+                    new GeometryFactory(),
+                    new TagKeyValueMapConverter(),
+                    RING_CLASSIFIER_V2_1,
+                    ignoredLayers);
+
+            final Collection<JtsLayer> layerValues = result.getLayers();
+            final int actualCount = layerValues.size();
+            final int expectedCount = 2;
+            assertEquals(expectedCount, actualCount);
+
+            assertTrue(result.getLayer("health") == null);
+            assertTrue(result.getLayer("bombs") == null);
+            assertTrue(result.getLayer("enemies") != null);
+            assertTrue(result.getLayer("bullet") != null);
         } catch (IOException e) {
             fail(e.getMessage());
         }
